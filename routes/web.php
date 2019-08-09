@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Route::get('/', function () {
     return view('home');
@@ -25,9 +25,9 @@ Route::post('/Evaluacion-Desempeño', 'FichaEvaluacion@Store')->name('StoreEvalu
 //Route::post('/Evaluacion-Rstd', 'FichaEvaluacion@Evaluacion_rstd')->name('ResultadoEvaluacion');
 // Auth::routes();
 Route::get('/Reporte-Evalua', 'FichaEvaluacion@Evaluacion_reporte')->name('ReporteEvaluacion');
+Route::get('/LoadPDF/{status}', 'FichaEvaluacion@LoadPDF')->name('LoadPDF');
 // Route::get('/home', 'HomeController@index')->name('home');
 
 // Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
-

@@ -1,10 +1,6 @@
 @extends('layouts.app')
 @section('enlace')
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
 @endsection
 @section('sliderpage')
     @include('layouts.slider');
@@ -23,30 +19,25 @@
                     
                             <form action="{{ route('StoreEvaluacion') }}" method="POST" id="FichaEvaluacion">
                                {{ csrf_field() }}
-                               <input type="hidden" name="NE" value="{{ count($alternativas) }}">
-                                @for ($i = 0; $i < count($alternativas); $i++)
+                               <input type="hidden" name="NE" value="{{ count($Assignment) }}">
+                                @for ($i = 0; $i < count($Assignment); $i++)
                                     <table class="table  table-striped table-hover mt-5 Pgt1">
                                       <thead class="table">
-                                          <tr><th>{{ $tipo_encuesta[$i]->descripcion }}</th></tr>
+                                          <tr><th>{{ $DescriptionSurvey[$i]->descripcion }}</th></tr>
                                           <tr><th>Preguntas</th>
-                                  @for ($j = 0; $j < count($alternativas[$i]) ; $j++)
-                                              {{-- <th>Preguntas</th>
-                                              <th>Nunca</th>
-                                              <th>Casi Nunca</th>
-                                              <th>Aveces</th>
-                                              <th>Siempre</th> --}}
-                                            <th>{{ $alternativas[$i][$j]->alternativa }}</th>
+                                  @for ($j = 0; $j < count($Assignment[$i]) ; $j++)
+                                            <th>{{ $Assignment[$i][$j]->alternativa }}</th>
                                   @endfor
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        @for ($k = 0; $k <count($preguntas[$i]) ; $k++)
+                                        @for ($k = 0; $k <count($Questions[$i]) ; $k++)
                                             <tr>
-                                              <td>{{ $preguntas[$i][$k]->detalle }}</td>
-                                              @for ($p = 0; $p < count($alternativas[$i]) ; $p++)
+                                              <td>{{ $Questions[$i][$k]->detalle }}</td>
+                                              @for ($p = 0; $p < count($Assignment[$i]) ; $p++)
                                                     <td> 
                                                         <div class="custom-control custom-radio">
-                                                          <input type="radio" id="customRadio{{ $i.$k.$p }}" name="customRadio{{ $i.$k }}" class="custom-control-input" value="{{ $alternativas[$i][$p]->id_alternativa }}">
+                                                          <input type="radio" id="customRadio{{ $i.$k.$p }}" name="customRadio{{ $i.$k }}" class="custom-control-input" value="{{ $Assignment[$i][$p]->id_alternativa }}">
                                                           <label class="custom-control-label" for="customRadio{{ $i.$k.$p }}"></label>
                                                         </div>
                                                     </td>
@@ -192,6 +183,8 @@
 @endsection
 
 @push('scripts')
+<script src="{{asset('js/jquery-3.2.1.min.js')}}"></script>
+<script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script>   
         $(document).ready(function() {
             let NumTable=$('table').toArray().length;
@@ -204,7 +197,7 @@
 
             $('#Evaluar').click(function(event) {
                     let NumFilas=$("table tbody tr").toArray().length;
-                    let NumColumna={{ count($alternativas) }};
+                    let NumColumna={{ count($Assignment) }};
 
                     for (var i = 0; i < NumColumna; i++) {
                       for (var j = 0; j < NumFilas; j++) {

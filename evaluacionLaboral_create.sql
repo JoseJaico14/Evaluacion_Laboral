@@ -1,6 +1,6 @@
-DROP DATABASE IF EXISTS evaluacionLaboral;
-CREATE DATABASE IF NOT EXISTS evaluacionLaboral;
-USE evaluacionLaboral;
+DROP DATABASE IF EXISTS evaluacionDesempenio;
+CREATE DATABASE IF NOT EXISTS evaluacionDesempenio;
+USE evaluacionDesempenio;
 
 DROP TABLE IF EXISTS 	alternativa,
 						bitacora, 
@@ -116,8 +116,6 @@ create table detalle_alternativa
    grupo_alternativa_id int not null,
    alternativa_id       int not null,
    created_at           datetime not null,
-   FOREIGN KEY (grupo_alternativa_id)  REFERENCES grupo_alternativa (id)    ON DELETE CASCADE,
-   FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -135,8 +133,6 @@ create table detalle_ficha
    createad_at          datetime not null,
    update_at            datetime not null,
    condicion            char(4) not null,
-   FOREIGN KEY (ficha_id)  REFERENCES ficha (id)    ON DELETE CASCADE,
-   FOREIGN KEY (usuario_id)  REFERENCES usuario (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -149,8 +145,6 @@ create table ficha_encuesta
    ficha_id             int not null,
    encuesta_id          int not null,
    created_at           datetime not null,
-   FOREIGN KEY (ficha_id)  REFERENCES ficha (id)    ON DELETE CASCADE,
-   FOREIGN KEY (encuesta_id)  REFERENCES encuesta (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -167,7 +161,6 @@ create table encuesta
    estado               int not null,
    created_at           datetime not null,
    update_at            datetime not null,
-   FOREIGN KEY (ficha_encuesta_id)  REFERENCES ficha_encuesta (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -183,8 +176,6 @@ create table pregunta
    tipo                 varchar(5) not null,
    created_at           datetime not null,
    update_at            datetime not null,
-   FOREIGN KEY (grupo_alternativa_id)  REFERENCES grupo_alternativa (id)    ON DELETE CASCADE,
-   FOREIGN KEY (encuesta_id)  REFERENCES encuesta (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -198,8 +189,6 @@ create table respuesta_marcada
    alternativa_id       int not null,
    idpregunta           int not null,
    created_at           datetime not null,
-   FOREIGN KEY (detalle_ficha_id)  REFERENCES detalle_ficha (id)    ON DELETE CASCADE,
-   FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -212,8 +201,6 @@ create table respuestas_correctas
    alternativa_id        int not null,
    pregunta_id           int not null,
    created_at           datetime not null,
-   FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE,
-   FOREIGN KEY (pregunta_id)  REFERENCES pregunta (id)    ON DELETE CASCADE,
    primary key (id)
 );
 
@@ -226,6 +213,36 @@ create table sesion
    usuario_id            int not null,
    accion               varchar(5) not null,
    created_at           datetime not null,
-   FOREIGN KEY (usuario_id)  REFERENCES usuario (id)    ON DELETE CASCADE,
    primary key (id)
 );
+
+
+ALTER TABLE detalle_alternativa
+   ADD FOREIGN KEY (grupo_alternativa_id)  REFERENCES grupo_alternativa (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE;
+   
+ALTER TABLE detalle_ficha
+   ADD FOREIGN KEY (ficha_id)  REFERENCES ficha (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (usuario_id)  REFERENCES usuario (id)    ON DELETE CASCADE;
+
+ALTER TABLE ficha_encuesta
+   ADD FOREIGN KEY (ficha_id)  REFERENCES ficha (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (encuesta_id)  REFERENCES encuesta (id)    ON DELETE CASCADE;
+   
+ALTER TABLE encuesta
+  ADD FOREIGN KEY (ficha_encuesta_id)  REFERENCES ficha_encuesta (id)    ON DELETE CASCADE;
+  
+ALTER TABLE pregunta
+   ADD FOREIGN KEY (grupo_alternativa_id)  REFERENCES grupo_alternativa (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (encuesta_id)  REFERENCES encuesta (id)    ON DELETE CASCADE;
+   
+ALTER TABLE respuesta_marcada
+   ADD FOREIGN KEY (detalle_ficha_id)  REFERENCES detalle_ficha (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE;
+   
+ALTER TABLE respuestas_correctas
+   ADD FOREIGN KEY (alternativa_id)  REFERENCES alternativa (id)    ON DELETE CASCADE,
+   ADD FOREIGN KEY (pregunta_id)  REFERENCES pregunta (id)    ON DELETE CASCADE;
+   
+ALTER TABLE sesion
+   ADD  FOREIGN KEY (usuario_id)  REFERENCES usuario (id)    ON DELETE CASCADE;
